@@ -51,8 +51,8 @@ class betterPing extends core {
 	 * @return null
 	 */
 	public function pingPost($postId) {
-		if($this->getOption('bp_publishPost') == 'true') {
-			$this->ping('post', $postId);
+		if(self::getOption('bp_publishPost') == 'true') {
+			self::ping('post', $postId);
 		}
 		return;
 	}
@@ -65,8 +65,8 @@ class betterPing extends core {
 	 * @return null
 	 */
 	public function pingPage($pageId) {
-		if($this->getOption('bp_publishPage') == 'true') {
-			$this->ping('page', $pageId);
+		if(self::getOption('bp_publishPage') == 'true') {
+			self::ping('page', $pageId);
 		}
 		return;
 	}
@@ -132,9 +132,9 @@ class betterPing extends core {
 		$url = trailingslashit(home_url());
 		$changeurl = get_permalink($id);
 		$category = $type;
-		$server = strtok($this->getOptions('bp_urls'), "\n");
+		$server = strtok(self::getOption('bp_urls'), "\n");
 		while ($server !== false) {
-			$this->sendPing($server, $name, $url, $changeurl, $category);
+			self::sendPing($server, $name, $url, $changeurl, $category);
 			$server = strtok("\n");
 		}
 	}
