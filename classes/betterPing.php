@@ -131,7 +131,7 @@ class betterPing extends core {
 		$name = get_option('blogname');
 		$url = trailingslashit(home_url());
 		$changeurl = get_permalink($id);
-		$category = $type;
+		$category = $id;
 		$server = strtok(self::getOption('bp_urls'), "\n");
 		while ($server !== false) {
 			self::sendPing($server, $name, $url, $changeurl, $category);
