@@ -40,14 +40,39 @@ class betterPing extends core {
 	 */
 	public function __construct() {
 		foreach(self::$filterMap as $filter => $items) {
-			add_filter($filter, array(__CLASS__, $items['method']), $items['priority'], $items['args']);
+			add_filter($filter, array($this, $items['method']), $items['priority'], $items['args']);
 		}
+		add_action('registered_post_type', array($this, 'registerPostType'), 10, 2);
+		$this->registerPostTypes();
+	}
+
+	/**
+	 * Register a specific page type.
+	 *
+	 * @param string $pType The post type to register.
+	 * @return null
+	 */
+	public function registerPostType($pType) {
+		add_filter("publish_{$pType}", array($this, 'pingPage'), 10, 2);
+		return;
+	}
+
+	/**
+	 * Register a specific page type.
+	 *
+	 * @return null
+	 */
+	public function registerPostTypes() {
+		foreach (get_post_types(array('_builtin' => false)) as $pType) {
+			$this->registerPostType($pType);
+		}
+		return;
 	}
 
 	/**
 	 * Will ping all ur's if a enabled and a post is published
-	 * 
-	 * @param int $postId 
+	 *
+	 * @param int $postId
 	 * @return null
 	 */
 	public function pingPost($postId) {
@@ -60,8 +85,8 @@ class betterPing extends core {
 
 	/**
 	 * Will ping all ur's if a enabled and a page is published
-	 * 
-	 * @param int $postId 
+	 *
+	 * @param int $postId
 	 * @return null
 	 */
 	public function pingPage($pageId) {
@@ -95,7 +120,7 @@ class betterPing extends core {
 
 	/**
 	 * Will return an option.
-	 * 
+	 *
 	 * @param mixed $key The key you wish to retrieve
 	 * @param mixed $default The default value if it does not exist
 	 * @return mixed
@@ -106,7 +131,7 @@ class betterPing extends core {
 
 	/**
 	 * Will save wp options
-	 * 
+	 *
 	 * @param string $key
 	 * @param mixed
 	 */
@@ -122,7 +147,7 @@ class betterPing extends core {
 
 	/**
 	 * Iterates the url's to ping then sends a request to them
-	 * 
+	 *
 	 * @param string $type The type of publish this is page|post
 	 * @param int $id
 	 * @return null
@@ -141,9 +166,9 @@ class betterPing extends core {
 
 	/**
 	 * Will send a ping with the url and updatedurl.
-	 * 
+	 *
 	 * weblogUpdates.ping (weblogname, weblogurl, changesurl=weblogurl, categoryname="none") returns struct
-	 * 
+	 *
 	 * @link http://xmlrpc.scripting.com/weblogsCom.html
 	 * @return null
 	 */
